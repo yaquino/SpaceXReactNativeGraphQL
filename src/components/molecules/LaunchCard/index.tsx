@@ -12,30 +12,26 @@ const LaunchCardStyles = StyleSheet.create({
     container: { flex: 1, alignItems: "center", justifyContent: "center", paddingVertical: 10 },
     contentContainer: { backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" },
     imageRow: { flex: 1, flexDirection: "row" },
-    
-        imageContainer: { height: 150, width: 155 },
-        imageStyle: { height: 150, width: 155 }
-    
-
+    imageContainer: { height: 150, width: 155 },
+    imageStyle: { height: 150, width: 155 }
   });
 
 const LaunchCard: FC<LaunchCardProps> = ({ launch, navigation }): ReactElement => {
     const missionName= launch.mission_name;
     const launchDate= launch.launch_date_local;
     const images = launch.links && launch.links.flickr_images;
+    const defaultImage = images && images.length && images[0];
 
     return (
         <View style={LaunchCardStyles.container}>
             <View style={LaunchCardStyles.contentContainer}>
                 <View style={LaunchCardStyles.imageRow}>
-                    {images && images.length > 0 && (
-                        <CustomImage 
-                            src={images[0]} 
-                            withFavorite={false} 
-                            style={LaunchCardStyles.imageContainer} 
-                            containerStyle={LaunchCardStyles.imageStyle}
-                        />
-                    )}
+                    <CustomImage 
+                        src={ defaultImage !== 0 ? defaultImage : "" } 
+                        withFavorite={false} 
+                        style={LaunchCardStyles.imageContainer} 
+                        containerStyle={LaunchCardStyles.imageStyle}
+                    />
                     <View style={{ paddingHorizontal: 10, paddingVertical: 5, width: 155, justifyContent: "space-around" }}>
                         <CustomText style={"TitleCard"} text={missionName} url={""}/>
                         <CustomText style={"Detail"} text={launchDate} url={""}/>

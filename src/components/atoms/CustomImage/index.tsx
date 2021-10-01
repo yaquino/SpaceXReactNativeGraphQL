@@ -19,26 +19,30 @@ const CustomImage: FC<CustomImageProps> = ({ src, withFavorite, style, container
   }
   const removeFavorite = (src: string): void => {
   }
-
+  
   return (
     <View style={containerStyle}>
-      <Image
-          source={src}
-          style={style}
-      />
-      {
-        withFavorite && (
-            <IconButton 
-                handleOnPress= {() => {
-                    if (isFavorite) removeFavorite(src);
-                    else addFavorite(src);
-                }} 
-                style={{ position: 'absolute', top: 10, right: 10 }}
-                iconSize={32}
-                iconColor={'black'}
-                iconName={isFavorite?'ios-heart':'heart-outline'}
-            />
-        )
+      {src && 
+        <>
+          <Image
+              source={src}
+              style={style}
+          />
+          {
+            withFavorite && (
+                <IconButton 
+                    handleOnPress= {() => {
+                        if (isFavorite) removeFavorite(src);
+                        else addFavorite(src);
+                    }} 
+                    style={{ position: 'absolute', top: 10, right: 10 }}
+                    iconSize={32}
+                    iconColor={'black'}
+                    iconName={isFavorite?'ios-heart':'heart-outline'}
+                />
+            )
+          }
+        </>
       }
     </View>
   )

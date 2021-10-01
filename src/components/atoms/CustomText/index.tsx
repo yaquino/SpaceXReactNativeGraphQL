@@ -14,9 +14,9 @@ const getStyle = (style:string) : object => {
         case "Title":
             return { color: "#777", paddingTop: 5 };
         case "Detail":
-            return { color: "#FFF", paddingTop: 3 };
+            return { color: "#000", paddingTop: 3 };
         default:
-            return { color: "#FFF", paddingTop: 5 };
+            return { color: "#777", paddingTop: 5 };
     }
 }
 
