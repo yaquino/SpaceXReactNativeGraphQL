@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect, useReducer }  from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -12,6 +12,8 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { persistCache } from 'apollo3-cache-persist';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-community/async-storage';
+
+import { initialFavoritesInfo, favoritesReducer, IFavoritesInfo, FavoritesContext } from 'stores/favoritesContext';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -58,6 +60,14 @@ function HomeTabs() {
 export default function App() {
   const [loadingCache, setLoadingCache] = useState(true);
 
+  const [state, dispatch] = useReducer(favoritesReducer, initialFavoritesInfo);
+  const userFavoritesValue = {
+    userFavoritesInfo: state,
+    updateFavoritesInfo: (type: string, payload: IFavoritesInfo) => {
+        dispatch( type, payload );
+    },
+  };
+
   useEffect(() => {
     persistCache({
       cache,
@@ -71,20 +81,22 @@ export default function App() {
 
   return (
     <ApolloProvider client={client}>
-      <NavigationContainer>
-        <RootStack.Navigator>
-          <RootStack.Screen
-            name="Home"
-            component={HomeTabs}
-            options={{ title: 'SpaceX Mission Launches' }}
-          />
-          <RootStack.Screen 
-            name="LaunchDetail" 
-            component={LaunchDetailPage}
-            options={{ title: 'Mission Detail' }}
-          />
-        </RootStack.Navigator>
-      </NavigationContainer>
+      <FavoritesContext.Provider value={userFavoritesValue}>
+        <NavigationContainer>
+          <RootStack.Navigator>
+            <RootStack.Screen
+              name="Home"
+              component={HomeTabs}
+              options={{ title: 'SpaceX Mission Launches' }}
+            />
+            <RootStack.Screen 
+              name="LaunchDetail" 
+              component={LaunchDetailPage}
+              options={{ title: 'Mission Detail' }}
+            />
+          </RootStack.Navigator>
+        </NavigationContainer>
+      </FavoritesContext.Provider>
     </ApolloProvider>
   );
 }

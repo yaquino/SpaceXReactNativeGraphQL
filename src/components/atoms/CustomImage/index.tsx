@@ -1,9 +1,10 @@
-import React, { FC, ReactElement } from 'react'
+import React, { FC, ReactElement, useContext } from 'react'
 import {
   Image,
   View
 } from 'react-native';
 import IconButton from 'components/atoms/IconButton'
+import { FavoritesContext } from 'stores/favoritesContext'
 
 type CustomImageProps = {
     src: any,
@@ -13,11 +14,25 @@ type CustomImageProps = {
 }
 
 const CustomImage: FC<CustomImageProps> = ({ src, withFavorite, style, containerStyle}): ReactElement => {
-  let isFavorite = false;
+  const userFavoritesContext = useContext(FavoritesContext);
+  const favoritesList = userFavoritesContext.userFavoritesInfo.favoritesList;
+  const isFavorite = favoritesList && favoritesList.length > 0 && favoritesList.find((f: string)=> f=== src);
 
   const addFavorite = (src: string): void => {
+    userFavoritesContext.updateFavoritesInfo({
+      type: 'SET_FAVORITES',
+      payload: {
+        favoritesList: [...favoritesList, src]
+      }
+    })
   }
   const removeFavorite = (src: string): void => {
+    userFavoritesContext.updateFavoritesInfo({
+      type: 'SET_FAVORITES',
+      payload: {
+        favoritesList: favoritesList.filter((f: string) => f !== src)
+      }
+    })
   }
   
   return (
